@@ -12,8 +12,7 @@ module washing_machine_top(
     output drain_valve,
     output motor,
     output [1:0] motor_dir,
-    output [3:0] leds,
-    output [6:0] display
+    output [3:0] leds
 );
 
     // Wire declarations
@@ -34,7 +33,6 @@ module washing_machine_top(
         .motor(motor),
         .motor_dir(motor_dir),
         .leds(leds),
-        .display(display),
         .timer_value(timer_value),
         .timer_start(timer_start)
     );

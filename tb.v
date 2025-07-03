@@ -16,7 +16,6 @@ module washing_machine_tb;
     wire motor;
     wire [1:0] motor_dir;
     wire [3:0] leds;
-    wire [6:0] display;
     
     // Instantiate the Unit Under Test (UUT)
     washing_machine_top uut (
@@ -29,8 +28,7 @@ module washing_machine_tb;
         .drain_valve(drain_valve),
         .motor(motor),
         .motor_dir(motor_dir),
-        .leds(leds),
-        .display(display)
+        .leds(leds)
     );
     
     // Clock generation (100MHz)

@@ -10,7 +10,6 @@ module washing_machine_fsm (
     output reg motor,
     output reg [1:0] motor_dir,
     output reg [3:0] leds,
-    output reg [6:0] display,
     output reg [31:0] timer_value,
     output reg timer_start
 );
@@ -158,18 +157,15 @@ always @(posedge clk) begin
     motor <=0;
     motor_dir <= 2'b00;
     leds <= 4'b0000;
-    display <= 7'b0000000;
 
     case (current_state)
         IDLE: begin
                 leds <= 4'b0001;
-                display <= 7'b1111001; // Display '1' for idle
             end
             
             FILL_WATER: begin
                 water_valve <= 1;
                 leds <= 4'b0010;
-                display <= 7'b0100100; // Display '2' for fill
             end
             
             WASH: begin
@@ -177,7 +173,6 @@ always @(posedge clk) begin
                 // Alternate motor direction
                 motor_dir <= (timer_value[20]) ? 2'b01 : 2'b10;
                 leds <= 4'b0100;
-                display <= 7'b0110000; // Display '3' for wash
             end
             
             RINSE: begin
@@ -185,7 +180,6 @@ always @(posedge clk) begin
                 motor <= 1;
                 motor_dir <= (timer_value[20]) ? 2'b01 : 2'b10;
                 leds <= 4'b1000;
-                display <= 7'b0011001; // Display '4' for rinse
             end
             
             SPIN: begin
@@ -193,22 +187,18 @@ always @(posedge clk) begin
                 motor <= 1;
                 motor_dir <= 2'b01; // Only clockwise for spin
                 leds <= 4'b0011;
-                display <= 7'b0010010; // Display '5' for spin
             end
             
             PAUSE: begin
                 leds <= 4'b1010;
-                display <= 7'b0001100; // Display 'P' for pause
             end
             
             COMPLETE: begin
                 leds <= 4'b1111;
-                display <= 7'b1000000; // Display '0' for complete
             end
             
             ERROR: begin
                 leds <= 4'b1001;
-                display <= 7'b0000110; // Display 'E' for error
             end
     endcase
 end
