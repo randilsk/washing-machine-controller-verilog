@@ -79,7 +79,7 @@ always @(*) begin
         end
 
         FILL_WATER: begin
-            if(door_closed) begin
+            if(!door_closed) begin
                 next_state = ERROR;
             end
             else if(timer_done) begin
@@ -116,6 +116,18 @@ always @(*) begin
                 timer_start = 1;
             end
         end
+
+        SPIN: begin
+            if (!door_closed) begin
+               next_state = ERROR;
+            end
+            else if (timer_done) begin
+               next_state = COMPLETE;
+               timer_value = 0; // optional, can be set again in COMPLETE if needed
+               timer_start = 0;
+            end
+        end
+
 
         PAUSE: begin
             if(start_pause && door_closed) begin
@@ -199,6 +211,7 @@ always @(posedge clk) begin
             
             ERROR: begin
                 leds <= 4'b1001;
+
             end
     endcase
 end
