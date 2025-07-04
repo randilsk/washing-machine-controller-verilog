@@ -39,6 +39,7 @@ parameter RINSE_TIME = 10000000;   // ~10 seconds
 parameter SPIN_TIME  = 8000000;    // ~8 seconds
 
 reg [1:0] current_mode;
+reg [3:0] prev_state; // To keep track of previous state
 reg is_running;
 reg is_paused;
 reg door_closed;
@@ -75,6 +76,11 @@ always @(*) begin
                 current_mode = mode_select;
                 timer_value = FILL_TIME;
                 timer_start = 1;   
+            end
+            else begin
+                timer_value = 0;
+                timer_start = 0;
+                timer_start = 0;
             end
         end
 
@@ -123,7 +129,6 @@ always @(*) begin
             end
             else if (timer_done) begin
                next_state = COMPLETE;
-               timer_value = 0; // optional, can be set again in COMPLETE if needed
                timer_start = 0;
             end
         end
@@ -131,7 +136,7 @@ always @(*) begin
 
         PAUSE: begin
             if(start_pause && door_closed) begin
-                next_state = current_state;
+                next_state = prev_state;
                 is_paused = 0;
                 timer_start = 0; 
             end  
@@ -156,6 +161,7 @@ always @(*) begin
 
     //handle pause button
     if(start_pause && is_running && door_closed && current_state != PAUSE) begin
+        prev_state = current_state;
         next_state = PAUSE;
         is_paused = 1;
     end
